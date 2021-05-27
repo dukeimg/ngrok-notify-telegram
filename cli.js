@@ -15,8 +15,8 @@ const pkg = require('./package.json');
 
 const cli = meow(
   `
-	Usage: ngrok-notify PROTO PORT [-n]
-        ngrok-notify init [-f]
+	Usage: ngrok-notify-telegram PROTO PORT [-n]
+        ngrok-notify-telegram init [-f]
 
   Positional arguments:
     PROTO           Protocol to use in the ngrok tunnel {http,tcp,tls}
@@ -30,7 +30,7 @@ const cli = meow(
 
   Examples
     Create ngrok tunnel to expose localhost web server running on port 8080.
-    $ ngrok-notify http 8080
+    $ ngrok-notify-telegram http 8080
 `,
   {
     flags: {
@@ -59,7 +59,7 @@ if (command === 'init') {
 const missingFiles = init.checkIfNeeded();
 if (missingFiles) {
   console.log(missingFiles);
-  console.log("Please run 'ngrok-notify init' to copy starter config files to your directory for customizing.")
+  console.log("Please run 'ngrok-notify-telegram init' to copy starter config files to your directory for customizing.")
   process.exit(1);
 }
 
