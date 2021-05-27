@@ -25,7 +25,7 @@ $ mkdir ngrok && cd ngrok
 Copy the starter configuration files into this directory:
 
 ```shell
-$ ngrok-notify init
+$ ngrok-notify-telegram init
 ```
 
 Create Bot following [this guide](https://core.telegram.org/bots#3-how-do-i-create-a-bot). At the end of the process 
@@ -43,12 +43,12 @@ Host a web server on port 8080 (or port of your choice) using [http-server](http
 Create an ngrok http tunnel to expose port 8080 running on the localhost to the world.
 
 ```shell
-$ ngrok-notify http 8080
+$ ngrok-notify-telegram http 8080
 ```
 
-An ngrok tunnel on the public Internet will be created and the ngrok URL will be printed to the console.  Additionally, `ngrok-notify` will send you a message to Telegram using your bot.
+An ngrok tunnel on the public Internet will be created and the ngrok URL will be printed to the console.  Additionally, `ngrok-notify-telegram` will send you a message to Telegram using your bot.
 
-Use ngrok-notify in conjunction with a process manager such as [pm2](http://pm2.keymetrics.io/).  After rebooting your system, you will receive a message with the new ngrok URL without needing to log into the system and start the tunnel manually.
+Use ngrok-notify-telegram in conjunction with a process manager such as [pm2](http://pm2.keymetrics.io/).  After rebooting your system, you will receive a message with the new ngrok URL without needing to log into the system and start the tunnel manually.
 
 ## Alternatives
 
