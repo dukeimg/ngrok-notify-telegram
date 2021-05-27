@@ -7,8 +7,7 @@ const yaml = require('js-yaml');
 const ngrok = require('ngrok');
 const init = require('./lib/init');
 const interpolate = require('./lib/interpolate');
-const sendEmail = require('./lib/send-email');
-const sendWebhook = require('./lib/send-webhook');
+const sendMessage = require('./lib/sendMessage');
 
 const updateNotifier = require('update-notifier');
 require('dotenv').config();
@@ -25,37 +24,16 @@ const cli = meow(
     init            Copy starter config files into directory for customizing
 
   Optional arguments:
-    -e, --email     Send an email providing the URL of the ngrok tunnel
-    -w, --webhook   Call a webhook providing the URL of the ngrok tunnel as POST params
     -h, --help      Show help
     -v, --version   Display version information
     -f, --force     Overwrite config files in directory if they exist.
 
-  Notes
-    Email messages are sent using the settings in the config.yml file and the
-    Gmail password stored in the .env file.
-
   Examples
     Create ngrok tunnel to expose localhost web server running on port 8080.
-    Email is sent with the ngrok URL since "-e" is included.
-    $ ngrok-notify http 8080 -e
-
-    Call a webhook instead of sending an email.
-    $ ngrok-notify http 8080 -w
-
-    You can send an email and call webhook with one command specifying both options.
-    $ ngrok-notify http 8080 -e -w
+    $ ngrok-notify http 8080
 `,
   {
     flags: {
-      email: {
-        type: 'boolean',
-        alias: 'e'
-      },
-      webhook: {
-        type: 'boolean',
-        alias: 'w'
-      },
       force: {
         type: 'boolean',
         alias: 'f'
@@ -122,8 +100,6 @@ if (auth) opts.auth = auth;
 const authtoken = process.env.NGROK_AUTHTOKEN;
 if (authtoken) opts.authtoken = authtoken;
 
-const emailOpts = config.email;
-
 (async () => {
   console.log("Opening connection with ngrok...");
   const url = await ngrok.connect(opts);
@@ -132,46 +108,24 @@ const emailOpts = config.email;
 
   // Add url so it can be interpolated from the message text containing "{url}"
   opts.url = url;
+  opts.port = opts.addr;
 
+  const telegram = config.telegram;
+  const chatIds = telegram.chat_ids;
+  const message = interpolate(telegram.message, opts);
 
-
-  const emailEnabled = cli.flags.email;
-
-  let emailTail = '';
-  if (emailEnabled) {
-    console.log("Sending Email...");
-    // Get Gmail password if set in .env file.
-    if (process.env.GMAIL_PASSWORD)
-      emailOpts.password = process.env.GMAIL_PASSWORD;
-
-    // substitute values like {proto} with their configuration values
-    // patch in property name of port since it's a more technically correct and known term.
-    opts.port = opts.addr;
-    const subject = interpolate(emailOpts.subject, opts);
-    const message = interpolate(emailOpts.message, opts);
-
-    sendEmail(emailOpts, subject, message);
-    emailTail = ' (email sent)';
-
-    console.log(`${message}${emailTail}`);
-  }
-
-  const webhookOpts = config.webhook;
-  const webhookEnabled = cli.flags.webhook;
-
-  if (webhookEnabled) {
+  if (!chatIds || chatIds.length === 0) {
+    console.log("No chat ids found in config.");
+  } else {
     console.log("Calling Webhook...");
-    const webhook_url = webhookOpts.url
-    const webhook_method = webhookOpts.method === "GET" ? "GET" : "POST";
-
-    try {
-      const response  = await sendWebhook(opts, webhook_url, webhook_method);
-      console.log(`Webhook triggered at ${webhook_url} with method ${webhook_method}`);
-    } catch (error) {
-      console.error(`Error calling webhook at ${webhook_url} with method ${webhook_method}`);
-      console.error(error);
+    for (const chatId of chatIds) {
+      try {
+        await sendMessage(chatId, message);
+      } catch (e) {
+        console.error(`Something went wrong: ${e.message}`)
+      }
     }
-
+    console.log("Success");
   }
 
   updateNotifier({pkg}).notify();

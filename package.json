@@ -1,13 +1,12 @@
 {
-  "name": "ngrok-notify",
-  "version": "0.5.2",
-  "description": "Create ngrok tunnel to expose localhost to the web and notify with ngrok URL",
+  "name": "ngrok-notify-telegram",
+  "version": "0.1.0",
+  "description": "Create ngrok tunnel to expose localhost to the web and notify in Telegram with ngrok URL",
   "license": "MIT",
-  "repository": "thisdavej/ngrok-notify",
+  "repository": "dukeimg/ngrok-notify-telegram",
   "author": {
-    "name": "Dave Johnson",
-    "email": "thisdavej@gmail.com",
-    "url": "thisdavej.com"
+    "name": "Viktor Danilov",
+    "email": "duke.img@gmail.com"
   },
   "bin": {
     "ngrok-notify": "cli.js"
@@ -24,12 +23,11 @@
     "app"
   ],
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "js-yaml": "^3.13.1",
     "meow": "^6.1.0",
     "ngrok": "^3.2.7",
-    "nodemailer": "^6.4.6",
     "update-notifier": "^4.1.0"
   },
   "devDependencies": {
