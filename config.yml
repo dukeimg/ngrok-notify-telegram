@@ -16,3 +16,4 @@ telegram:
     # - 12346
 
   message: "The ngrok URL for {proto} on port {port} is: {url}"
+  length: "20"

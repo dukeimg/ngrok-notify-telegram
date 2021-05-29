@@ -8,6 +8,7 @@ const ngrok = require('ngrok');
 const init = require('./lib/init');
 const interpolate = require('./lib/interpolate');
 const telegramClient = require('./lib/telegram');
+const haiku = require('./lib/haiku');
 
 const updateNotifier = require('update-notifier');
 require('dotenv').config();
@@ -131,6 +132,8 @@ if (authtoken) opts.authtoken = authtoken;
         const messageId = await telegramClient.sendMessage(chatId, message);
         await telegramClient.unpinMessages(chatId);
         await telegramClient.pinMessage(chatId, messageId);
+        const haikuText = await haiku.writeHaiku(config.length);
+        await telegramClient.sendMessage(chatId, haikuText);
       } catch (e) {
         console.error(`Something went wrong: ${JSON.stringify(e.response.data, null , 2)}`)
       }

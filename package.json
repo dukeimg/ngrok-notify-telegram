@@ -1,13 +1,13 @@
 {
-  "name": "ngrok-notify-telegram",
+  "name": "@dukeimg/ngrok-notify-telegram",
   "version": "0.2.0",
   "description": "Create ngrok tunnel to expose localhost to the web and notify in Telegram with ngrok URL",
   "license": "MIT",
-  "repository": "dukeimg/ngrok-notify-telegram",
-  "author": {
-    "name": "Viktor Danilov",
-    "email": "duke.img@gmail.com"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dukeimg/ngrok-notify-telegram.git"
   },
+  "author": "Viktor Danilov <duke.img@gmail.com>",
   "bin": {
     "ngrok-notify-telegram": "cli.js"
   },
@@ -35,5 +35,13 @@
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-import": "^2.20.1"
+  },
+  "bugs": {
+    "url": "https://github.com/dukeimg/ngrok-notify-telegram/issues"
+  },
+  "homepage": "https://github.com/dukeimg/ngrok-notify-telegram#readme",
+  "main": "cli.js",
+  "directories": {
+    "lib": "lib"
   }
 }
