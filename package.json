@@ -1,6 +1,6 @@
 {
   "name": "ngrok-notify-telegram",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Create ngrok tunnel to expose localhost to the web and notify in Telegram with ngrok URL",
   "license": "MIT",
   "repository": "dukeimg/ngrok-notify-telegram",

@@ -7,7 +7,7 @@ const yaml = require('js-yaml');
 const ngrok = require('ngrok');
 const init = require('./lib/init');
 const interpolate = require('./lib/interpolate');
-const sendMessage = require('./lib/sendMessage');
+const telegramClient = require('./lib/telegram');
 
 const updateNotifier = require('update-notifier');
 require('dotenv').config();
@@ -112,17 +112,27 @@ if (authtoken) opts.authtoken = authtoken;
 
   const telegram = config.telegram;
   const chatIds = telegram.chat_ids;
+  const pinChatIds = telegram.chat_ids_pin;
   const message = interpolate(telegram.message, opts);
 
-  if (!chatIds || chatIds.length === 0) {
+  if ((!chatIds || chatIds.length === 0) && (!pinChatIds || pinChatIds.length === 0)) {
     console.log("No chat ids found in config.");
   } else {
     console.log("Calling Webhook...");
-    for (const chatId of chatIds) {
+    for (const chatId of chatIds || []) {
       try {
-        await sendMessage(chatId, message);
+        await telegramClient.sendMessage(chatId, message);
       } catch (e) {
         console.error(`Something went wrong: ${e.message}`)
+      }
+    }
+    for (const chatId of pinChatIds || []) {
+      try {
+        const messageId = await telegramClient.sendMessage(chatId, message);
+        await telegramClient.unpinMessages(chatId);
+        await telegramClient.pinMessage(chatId, messageId);
+      } catch (e) {
+        console.error(`Something went wrong: ${JSON.stringify(e.response.data, null , 2)}`)
       }
     }
     console.log("Success");

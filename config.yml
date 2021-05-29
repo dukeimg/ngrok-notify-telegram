@@ -5,6 +5,14 @@ ngrok:
 
 telegram:
   chat_ids:
-    - 12345
+    # - 12345
     # - 12346
+
+  # Use chat_ids_pin to specify chats where you want to pin your message
+  # (it will unpin all currently pinned messages)
+  # Your bot must be a chat admin to use this functionality
+  chat_ids_pin:
+    # - 12346
+    # - 12346
+
   message: "The ngrok URL for {proto} on port {port} is: {url}"
