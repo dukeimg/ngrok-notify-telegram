@@ -132,8 +132,12 @@ if (authtoken) opts.authtoken = authtoken;
         const messageId = await telegramClient.sendMessage(chatId, message);
         await telegramClient.unpinMessages(chatId);
         await telegramClient.pinMessage(chatId, messageId);
-        const haikuText = await haiku.writeHaiku(config.length);
-        await telegramClient.sendMessage(chatId, haikuText);
+        try {
+          const haikuText = await haiku.writeHaiku(config.length);
+          await telegramClient.sendMessage(chatId, haikuText);
+        } catch (e) {
+          console.log('This is fine');
+        }
       } catch (e) {
         console.error(`Something went wrong: ${JSON.stringify(e.response.data, null , 2)}`)
       }
